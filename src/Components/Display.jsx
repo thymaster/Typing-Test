@@ -3,13 +3,15 @@ import { Paragraph } from "./Paragraph";
 import "../App.css";
 
 let interval = null;
-let input = document.querySelector('.typingSpace');
+// let input = document.querySelector('.typingSpace');  
 
 export function Display() {
-  const [timerCount, setTimerCount] = useState(`10`);
+  const [timerCount, setTimerCount] = useState(10);
   const [wordCount, setWordCount] = useState(0);
   const [started, setStarted] = useState(false);
   const [ended, setEnded] = useState(false);
+  const [characterCount, setCharacterCount] = useState(0);
+  const [typingSpeed, setTypingSpeed] = useState(0);
 
   // const onKeyUpHandler = () => {
   //   setWordCount(wordCount + 1);
@@ -48,7 +50,7 @@ export function Display() {
 
   const onClickHandler = () => {
     setTimer();
-  }
+  };
 
   // function wordCounter(e) {
   //   let incomingText = e.value;
@@ -61,8 +63,15 @@ export function Display() {
   // }
 
   const onKeyDownHandler = () => {
-    // wordCounter();
-    setWordCount(wordCount + 1);
+    setCharacterCount(characterCount + 1);
+  };
+
+  const buttonStyle = {
+    cursor: "pointer",
+  };
+
+  const typingSpeedCounter = () => {
+    setTypingSpeed({characterCount} / 5);
   }
 
   return (
@@ -70,15 +79,18 @@ export function Display() {
       <div className="display">
         <div>Remaining Time: {timerCount}</div>
         <div className="count">Total Word Count: {wordCount}</div>
-        <div>WPM: 60</div>
-        <div>Characters Typed: 200</div>
+        <div>WPM: {typingSpeed}</div>
+        <div>Characters Typed: {characterCount}</div>
       </div>
-      <button onClick={onClickHandler}>Start Timer</button>
+      <button onClick={onClickHandler} style={buttonStyle}>
+        Go!
+      </button>
       <div className="paragraph">
         <Paragraph />
         <label>Start Typing below...</label>
         <textarea
-          onKeyUp={onKeyDownHandler}
+          onKeyDown={onKeyDownHandler}
+          onKeyUp={typingSpeedCounter}
           className="typingSpace"
           rows="2"
           cols="10"
