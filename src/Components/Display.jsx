@@ -1,21 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Paragraph } from "./Paragraph";
 import "../App.css";
 
 let interval = null;
-// let input = document.querySelector('.typingSpace');  
 
 export function Display() {
   const [timerCount, setTimerCount] = useState(10);
-  const [wordCount, setWordCount] = useState(0);
   const [started, setStarted] = useState(false);
   const [ended, setEnded] = useState(false);
+  const [wordCount, setWordCount] = useState(0);
   const [characterCount, setCharacterCount] = useState(0);
   const [typingSpeed, setTypingSpeed] = useState(0);
-
-  // const onKeyUpHandler = () => {
-  //   setWordCount(wordCount + 1);
-  // };
 
   const handleEnd = () => {
     setEnded(true);
@@ -52,27 +47,33 @@ export function Display() {
     setTimer();
   };
 
-  // function wordCounter(e) {
-  //   let incomingText = e.value;
-  //   let text = input.value.split(' ').filter(Boolean);
-  //   setWordCount(text.length);
-  // }
-
-  // function characterCounter() {
-  //   let characterCount = input.value.length;
-  // }
-
-  const onKeyDownHandler = () => {
-    setCharacterCount(characterCount + 1);
+  const wordLength = (event) => {
+    setWordCount(event.target.value.split(" ").filter(Boolean).length);
   };
 
-  const buttonStyle = {
-    cursor: "pointer",
+  useEffect(() => {
+    window.addEventListener("keydown", wordLength);
+    return () => {
+      window.removeEventListener("keydown", wordLength);
+    };
+  }, []);
+
+  const onKeyDownHandler = (event) => {
+    setCharacterCount(event.target.value.length);
   };
+
+  useEffect(() => {
+    window.addEventListener("keydown", onKeyDownHandler);
+    return () => {
+      window.removeEventListener("keydown", onKeyDownHandler);
+    };
+  }, []);
 
   const typingSpeedCounter = () => {
-    setTypingSpeed({characterCount} / 5);
-  }
+    // setTypingSpeed(Math.ceil(characterCount / 5));
+    const timeRemains = ((60 - timerCount) / 60).toFixed(2);
+    setTypingSpeed(Math.ceil(characterCount / 5 / timeRemains));
+  };
 
   return (
     <div class="container">
@@ -82,7 +83,7 @@ export function Display() {
         <div>WPM: {typingSpeed}</div>
         <div>Characters Typed: {characterCount}</div>
       </div>
-      <button onClick={onClickHandler} style={buttonStyle}>
+      <button onClick={onClickHandler} style={{ cursor: "pointer" }}>
         Go!
       </button>
       <div className="paragraph">
