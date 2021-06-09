@@ -18,11 +18,11 @@ export function Display() {
     clearInterval(interval);
   };
 
-  // const handleStart = () => {
-  //   setStarted(true);
-  //   setEnded(false);
-  //   setTimer();
-  // };
+  const handleStart = () => {
+    setStarted(true);
+    setEnded(false);
+    setTimer();
+  };
 
   const setTimer = () => {
     const now = Date.now();
@@ -43,23 +43,9 @@ export function Display() {
   //   };
   // }, [timerCount, setTimerCount]);
 
-  const onClickHandler = () => {
-    setTimer();
-  };
-
-  const wordLength = (event) => {
-    setWordCount(event.target.value.split(" ").filter(Boolean).length);
-  };
-
-  useEffect(() => {
-    window.addEventListener("keydown", wordLength);
-    return () => {
-      window.removeEventListener("keydown", wordLength);
-    };
-  }, []);
-
   const onKeyDownHandler = (event) => {
     setCharacterCount(event.target.value.length);
+    setWordCount(event.target.value.split(" ").filter(Boolean).length);
   };
 
   useEffect(() => {
@@ -70,7 +56,6 @@ export function Display() {
   }, []);
 
   const typingSpeedCounter = () => {
-    // setTypingSpeed(Math.ceil(characterCount / 5));
     const timeRemains = ((60 - timerCount) / 60).toFixed(2);
     setTypingSpeed(Math.ceil(characterCount / 5 / timeRemains));
   };
@@ -83,7 +68,7 @@ export function Display() {
         <div>WPM: {typingSpeed}</div>
         <div>Characters Typed: {characterCount}</div>
       </div>
-      <button onClick={onClickHandler} style={{ cursor: "pointer" }}>
+      <button onClick={handleStart} style={{ cursor: "pointer" }}>
         Go!
       </button>
       <div className="paragraph">
@@ -93,7 +78,7 @@ export function Display() {
           onKeyDown={onKeyDownHandler}
           onKeyUp={typingSpeedCounter}
           className="typingSpace"
-          rows="2"
+          rows="7"
           cols="10"
           placeholder="type here..."
         ></textarea>
