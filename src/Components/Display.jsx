@@ -46,6 +46,13 @@ export function Display() {
   const onKeyDownHandler = (event) => {
     setCharacterCount(event.target.value.length);
     setWordCount(event.target.value.split(" ").filter(Boolean).length);
+    // event.preventDefault();
+    // const { key } = event;
+    // const text = event.target.value.charAt(characterCount);
+    // if (key === text) {
+    //   setCharacterCount(event.target.value.length);
+    //   setWordCount(event.target.value.split(" ").filter(Boolean).length);
+    // }
   };
 
   useEffect(() => {
@@ -62,6 +69,7 @@ export function Display() {
 
   return (
     <div class="container">
+      <p className="heading">Fastest Fingers</p>
       <div className="display">
         <div>Remaining Time: {timerCount}</div>
         <div className="count">Total Word Count: {wordCount}</div>
@@ -69,7 +77,7 @@ export function Display() {
         <div>Characters Typed: {characterCount}</div>
       </div>
       <button onClick={handleStart} style={{ cursor: "pointer" }}>
-        Go!
+        Start Timer!
       </button>
       <div className="paragraph">
         <Paragraph />
