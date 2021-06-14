@@ -11,16 +11,21 @@ export function Display() {
   const [wordCount, setWordCount] = useState(0);
   const [characterCount, setCharacterCount] = useState(0);
   const [typingSpeed, setTypingSpeed] = useState(0);
+  const [textAreaStatus, setTextAreaStatus] = useState(true);
+  const [color, setColor] = useState("#aadaa9");
+  const [input, setInput] = useState(""); //for entered text
 
   const handleEnd = () => {
     setEnded(true);
     setStarted(false);
+    setTextAreaStatus(false);
     clearInterval(interval);
   };
 
   const handleStart = () => {
     setStarted(true);
     setEnded(false);
+    setTextAreaStatus(true);
     setTimer();
   };
 
@@ -36,29 +41,22 @@ export function Display() {
     }, 1000);
   };
 
-  // useEffect(() => {
-  //   setTimer();
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, [timerCount, setTimerCount]);
-
-  const onKeyDownHandler = (event) => {
+  const textChangeHandler = (event) => {
+    setInput(event.target.value);
+    setStarted(true);
     setCharacterCount(event.target.value.length);
     setWordCount(event.target.value.split(" ").filter(Boolean).length);
-    // event.preventDefault();
-    // const { key } = event;
-    // const text = event.target.value.charAt(characterCount);
-    // if (key === text) {
-    //   setCharacterCount(event.target.value.length);
-    //   setWordCount(event.target.value.split(" ").filter(Boolean).length);
-    // }
   };
 
+  // const onKeyDownHandler = (event) => {
+  //   setCharacterCount(event.target.value.length);
+  //   setWordCount(event.target.value.split(" ").filter(Boolean).length);
+  // };
+
   useEffect(() => {
-    window.addEventListener("keydown", onKeyDownHandler);
+    window.addEventListener("keydown", textChangeHandler);
     return () => {
-      window.removeEventListener("keydown", onKeyDownHandler);
+      window.removeEventListener("keydown", textChangeHandler);
     };
   }, []);
 
@@ -67,30 +65,47 @@ export function Display() {
     setTypingSpeed(Math.ceil(characterCount / 5 / timeRemains));
   };
 
+  const timeLimitHandler = () => {
+    //when timer comes to 0
+    setTextAreaStatus(false);
+    setEnded();
+  };
+
+  const resetButtonHandler = () => {
+    setTextAreaStatus(false);
+    setEnded();
+    window.location.reload();
+  };
+
   return (
     <div class="container">
-      <p className="heading">Fastest Fingers</p>
+      <h2 className="heading">Fastest Fingers</h2>
       <div className="display">
-        <div>Remaining Time: {timerCount}</div>
-        <div className="count">Total Word Count: {wordCount}</div>
-        <div>WPM: {typingSpeed}</div>
-        <div>Characters Typed: {characterCount}</div>
+        <h3 timeLimitHandler={timeLimitHandler}>
+          Remaining Time: {timerCount}
+        </h3>
+        <h3 className="count">Total Word Count: {wordCount}</h3>
+        <h3>WPM: {typingSpeed}</h3>
+        <h3>Characters Typed: {characterCount}</h3>
       </div>
       <button onClick={handleStart} style={{ cursor: "pointer" }}>
         Start Timer!
       </button>
+      <button onClick={resetButtonHandler} style={{ cursor: "pointer" }}>
+        Reset!
+      </button>
       <div className="paragraph">
-        <Paragraph />
-        <label>Start Typing below...</label>
-        <textarea
-          onKeyDown={onKeyDownHandler}
-          onKeyUp={typingSpeedCounter}
-          className="typingSpace"
-          rows="7"
-          cols="10"
-          placeholder="type here..."
-        ></textarea>
+          <Paragraph />
+          <label>Start Typing below...</label>
+          <textarea
+            onChange={textChangeHandler}
+            onKeyUp={typingSpeedCounter}
+            className="typingSpace"
+            rows="7"
+            cols="10"
+            placeholder="type here..."
+          ></textarea>
+        </div>
       </div>
-    </div>
   );
 }
