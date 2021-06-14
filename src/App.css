@@ -38,9 +38,9 @@ button {
   margin: 20px 20px;
   padding: 10px 10px;
   font-size: 15px;
-  border: 2px dotted black;
+  border: 2px solid black;
   border-radius: 0.5rem;
-  background-color: burlywood;
+  /* background-color: burlywood; */
 }
 
 .paragraph {
