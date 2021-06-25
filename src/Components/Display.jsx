@@ -10,7 +10,7 @@ var givenArr = { Paragraph };
 export function Display() {
   const inputRef = useRef(null);
   const outputRef = useRef(null);
-  const [timerCount, setTimerCount] = useState(10);
+  const [timerCount, setTimerCount] = useState(60);
   const [started, setStarted] = useState(false);
   const [ended, setEnded] = useState(false);
   const [wordCount, setWordCount] = useState(0);
